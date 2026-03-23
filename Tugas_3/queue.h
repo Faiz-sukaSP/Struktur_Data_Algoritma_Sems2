@@ -20,10 +20,11 @@ typedef struct
 void init_arr(QueueArr *q_arr);               // inisialisasi awal
 int isempty_arr(QueueArr *q_arr);             // cek array apakah kosong atau terisi
 int isfull_arr(QueueArr *q_arr);              // cek apakah array sudah penuh atau tidak
+void clear_arr(QueueArr *q_arr);              // membersihkan array
 void enqueue_arr(QueueArr *q_arr, char *doc); // menambahkan dokumen kedalam antrian
 void dequeue_arr(QueueArr *q_arr);            // mengeluarkan antrian
 void display_arr(QueueArr *q_arr);            // menampilkan antrian
-void add_dokument_arr(QueueArr *q_arr);       // enqueue
+void peek_arr(QueueArr *q_arr);               // melihat antrian
 
 /*
 =================================
