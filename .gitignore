@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# macOS debug files
+*.dSYM/
+
+# VS Code (optional)
+.vscode/
+
+# compiled files (C/C++)
+*.out
+*.o
+*.exe
+
+# backup / zip
+*.zip
