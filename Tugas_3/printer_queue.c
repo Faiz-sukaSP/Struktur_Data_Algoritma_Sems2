@@ -140,3 +140,50 @@ void peek_arr(QueueArr *q_arr)
     printf("Dokumen berikutnya yang akan dicetak: \"%s\"\n", q_arr->data[q_arr->front]); // menampilkan data pertama
     printf("===============================\n");
 }
+
+/*
+=================================
+        QUEUE LINKED LIST
+=================================
+*/
+
+// Inisialisasi awal lingked list
+void init_queue_ll(QueueLL *q_ll)
+{
+    // inisialisasi awal bahwa queue masih kosong
+    q_ll->front = NULL;
+    q_ll->rear = NULL;
+    q_ll->size = 0;
+}
+
+// Fungsi cek antrian
+int isempty_ll(QueueLL *q_ll)
+{
+    return q_ll->front == NULL; // cek apakah fron bernilai NULL
+}
+
+// Fungsi menambahkan antrian (enqueue)
+void enqueue_ll(QueueLL *q_ll, const char *data)
+{
+    NodeLL newnode = (NodeLL)malloc(sizeof(QueueNode)); // mengalokasikan memory di heap seukuran QueueNode
+
+    if (newnode == NULL)
+    {
+        printf("Gagal mengalokasikan memory.... memory penuh!"); // pemberitahuan apabila malloc gagal
+    }
+    strcpy(newnode->data, data); // menyalin string input kedalam node
+    newnode->next = NULL;        // set next = NULL
+
+    if (isempty_ll(q_ll)) // cek apakah queue kosong
+    {
+        q_ll->front = q_ll->rear = newnode; // node pertama, front dan rear menunjuk ke node yang sama
+    }
+    else
+    {
+        q_ll->rear->next = newnode; // sambungkan ke node terakhir
+        q_ll->rear = newnode;       // update rear ke node yang baru
+    }
+
+    q_ll->size++;                                // size bertambah
+    printf("Dokumen %s masuk ke antrian", data); // output sistem
+}

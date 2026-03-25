@@ -28,27 +28,27 @@ void peek_arr(QueueArr *q_arr);               // melihat antrian
 
 /*
 =================================
-     QUEUE LINKED LIST
+        QUEUE LINKED LIST
 =================================
 */
 
-typedef struct QueueNode *Node;
+typedef struct QueueNode *NodeLL;
 typedef struct QueueNode
 {
     char data[100];
-    Node next;
+    NodeLL next;
 } QueueNode;
 
 typedef struct
 {
-    Node front;
-    Node rear;
+    NodeLL front;
+    NodeLL rear;
     unsigned size;
 } QueueLL;
 
 // fungsi linked list
-void init_queueLL(QueueLL *q);
-int is_emptyLL(QueueLL *q);
+void init_queue_ll(QueueLL *q_ll);
+int isempty_ll(QueueLL *q);
 void enqueue_LL(QueueLL *q, char *data);
 void dequeue_LL(QueueLL *q);
 void peek_LL(QueueLL *q);
