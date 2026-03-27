@@ -48,10 +48,10 @@ typedef struct
 
 // fungsi linked list
 void init_queue_ll(QueueLL *q_ll);
-int isempty_ll(QueueLL *q);
-void enqueue_LL(QueueLL *q, char *data);
-void dequeue_LL(QueueLL *q);
-void peek_LL(QueueLL *q);
-void display_LL(QueueLL *q);
+int isempty_ll(QueueLL *q_ll);
+void enqueue_ll(QueueLL *q_ll, const char *data);
+void dequeue_LL(QueueLL *q_ll);
+void peek_LL(QueueLL *q_ll);
+void display_LL(QueueLL *q_ll);
 
 #endif
