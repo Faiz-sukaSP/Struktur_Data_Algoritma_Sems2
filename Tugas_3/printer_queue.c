@@ -148,7 +148,7 @@ void peek_arr(QueueArr *q_arr)
 */
 
 // Inisialisasi awal lingked list
-void init_queue_ll(QueueLL *q_ll)
+void init_LL(QueueLL *q_ll)
 {
     // inisialisasi awal bahwa queue masih kosong
     q_ll->front = NULL;
@@ -157,13 +157,13 @@ void init_queue_ll(QueueLL *q_ll)
 }
 
 // Fungsi cek antrian
-int isempty_ll(QueueLL *q_ll)
+int isempty_LL(QueueLL *q_ll)
 {
     return q_ll->front == NULL; // cek apakah fron bernilai NULL
 }
 
 // Fungsi menambahkan antrian (enqueue)
-void enqueue_ll(QueueLL *q_ll, const char *data)
+void enqueue_LL(QueueLL *q_ll, const char *doc)
 {
     NodeLL newnode = (NodeLL)malloc(sizeof(QueueNode)); // mengalokasikan memory di heap seukuran QueueNode
 
@@ -172,11 +172,12 @@ void enqueue_ll(QueueLL *q_ll, const char *data)
         printf("\n===============================\n");
         printf("Gagal mengalokasikan memory.... memory penuh!"); // pemberitahuan apabila malloc gagal
         printf("\n===============================\n");
+        return;
     }
-    strcpy(newnode->data, data); // menyalin string input kedalam node
-    newnode->next = NULL;        // set next = NULL
+    strcpy(newnode->data, doc); // menyalin string input kedalam node
+    newnode->next = NULL;       // set next = NULL
 
-    if (isempty_ll(q_ll)) // cek apakah queue kosong
+    if (isempty_LL(q_ll)) // cek apakah queue kosong
     {
         q_ll->front = q_ll->rear = newnode; // node pertama, front dan rear menunjuk ke node yang sama
     }
@@ -186,15 +187,15 @@ void enqueue_ll(QueueLL *q_ll, const char *data)
         q_ll->rear = newnode;       // update rear ke node yang baru
     }
 
-    q_ll->size++;                                // size bertambah
-    printf("Dokumen %s masuk ke antrian", data); // output sistem
+    q_ll->size++;                               // size bertambah
+    printf("Dokumen %s masuk ke antrian", doc); // output sistem
     printf("\n===============================\n");
 }
 
 // Fungsi untuk mengeluarkan antrian
 void dequeue_LL(QueueLL *q_ll)
 {
-    if (is_emptyLL(q_ll)) // cek antrian
+    if (isempty_LL(q_ll)) // cek antrian
     {
         printf("Antrian kosong!\n"); // ouput apabila antian kosong
         return;                      // keluar dari fungsi
@@ -215,10 +216,34 @@ void dequeue_LL(QueueLL *q_ll)
     q_ll->size--; // size berkurang 1
 }
 
-// Fungsi untuk menampilkan elemen yang akan di cetak
-void peak_LL(QueueLL *q_ll)
+// Fungsi untuk menampilkan list antrian
+void display_LL(QueueLL *q_ll)
 {
-    if (isempty_ll(q_ll))
+    if (isempty_LL(q_ll)) // cek apakah antrian kosong atau tidak
+    {
+        printf("Antrian kosong!\n"); // ouput apabila antian kosong
+        return;                      // keluar dari fungsi
+    }
+    // menampilkan setiap antrian
+    printf("\n===============================\n");
+    printf("=== Antrian dokumen(LL) ===\n");
+
+    NodeLL temp = q_ll->front; // temp menyimpan antrian terdepan
+    int i = 1;                 // memberikan indeks
+
+    while (temp != NULL) // loop hingga antrian kosong
+    {
+        printf("%d. %s\n", i++, temp->data); // menampilkan indeks untuk setiap antrian
+        temp = temp->next;                   // temp menyimpan alamat selanjutnya
+    }
+    printf("\nJumlah Antrian: \"%u\" dokumen", (unsigned)q_ll->size);
+    printf("\n===============================\n");
+}
+
+// Fungsi untuk menampilkan elemen yang akan di cetak
+void peek_LL(QueueLL *q_ll)
+{
+    if (isempty_LL(q_ll))
     {
         printf("\n===============================\n");
         printf("Antrian telah dicetak semuanya\n"); // output jika antrian telah kosong
@@ -230,27 +255,6 @@ void peak_LL(QueueLL *q_ll)
     {
         printf("\n===============================\n");
         printf("Dokumen berikutnya : %s\n", q_ll->front->data); // menampilkan dokumen yang akan dicetak
-        printf("\n===============================\n");
-    }
-}
-
-// Fungsi untuk menampilkan list antrian
-void display_LL(QueueLL *q_ll)
-{
-    if (is_emptyLL(q_ll)) // cek apakah antrian kosong atau tidak
-    {
-        printf("Antrian kosong!\n"); // ouput apabila antian kosong
-        return;                      // keluar dari fungsi
-    }
-    // menampilkan setiap antrian
-    printf("\n===============================\n");
-    printf("=== Antrian dokumen(LL) ===\n");
-
-    NodeLL temp = q_ll->front; // temp menyimpan antrian terdepan
-    while (temp != NULL)       // loop hingga antrian kosong
-    {
-        printf("Antrian: %s\n", temp->data);
-        temp = temp->next; // temp menyimpan alamat selanjutnya
         printf("\n===============================\n");
     }
 }

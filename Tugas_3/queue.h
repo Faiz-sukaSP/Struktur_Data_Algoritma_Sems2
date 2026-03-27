@@ -47,11 +47,11 @@ typedef struct
 } QueueLL;
 
 // fungsi linked list
-void init_queue_ll(QueueLL *q_ll);
-int isempty_ll(QueueLL *q_ll);
-void enqueue_ll(QueueLL *q_ll, const char *data);
-void dequeue_LL(QueueLL *q_ll);
-void peek_LL(QueueLL *q_ll);
-void display_LL(QueueLL *q_ll);
+void init_LL(QueueLL *q_ll);                      // inisialisasi awal
+int isempty_LL(QueueLL *q_ll);                    // mengecek apakah antrian kosong
+void enqueue_LL(QueueLL *q_ll, const char *data); // menambahkan dokumen kedalam antrian
+void dequeue_LL(QueueLL *q_ll);                   // mengeluarkan dokumen dari antrian
+void display_LL(QueueLL *q_ll);                   // menampilkan antrian
+void peek_LL(QueueLL *q_ll);                      // lihat dokumen yang akan di cetak
 
 #endif
