@@ -32,10 +32,13 @@ void menu_arr()
         {
             printf("\n===============================\n");
             printf("Input yang Anda Masukkan Tidak Sesuai, Hanya 1-5!! \n");
+            while (getchar() != '\n')
+                ;
             continue;
         }
 
-        getchar(); // membersihkan newline
+        while (getchar() != '\n')
+            ; // membersihkan newline
 
         switch (pilihan)
         {
@@ -72,16 +75,16 @@ void menu_arr()
     } while (pilihan != 5);
 }
 
-void menu_LL()
+void menu_ll()
 {
     QueueLL q_ll;
-    init_LL(&q_ll);
+    init_ll(&q_ll);
 
     int pilihan;
 
     do
     {
-        printf("\n===== Simulasi Printer (Array) =====\n");
+        printf("\n===== Simulasi Printer (Linked list) =====\n");
         printf("1. Tambahkan Dokumen\n");
         printf("2. Keluarkan  Dokumen\n");
         printf("3. Tampilkan Antrian Dokumen\n");
@@ -91,6 +94,7 @@ void menu_LL()
         printf("\nMasukkan pilihan yang anda inginkan: ");
         // validasi apakah user menginpuy menu yang benar sebelum masuk switch
         if (scanf("%d", &pilihan) != 1)
+
         {
             printf("\n===============================\n");
             printf("Input yang Anda Masukkan Tidak Sesuai, Harus Berupa Angka!! \n");
@@ -103,40 +107,44 @@ void menu_LL()
         {
             printf("\n===============================\n");
             printf("Input yang Anda Masukkan Tidak Sesuai, Hanya 1-5!! \n");
+            while (getchar() != '\n')
+                ;
             continue;
         }
 
-        getchar(); // membersihkan new line
+        while (getchar() != '\n')
+            ; // membersihkan new line
 
         switch (pilihan)
         {
         case 1:
         {
-            char doc[100];
+            char data[100];
             printf("\n===============================\n");
             printf("Masukkan ID dokumen: "); // user diminta untuk mengintput ID dokumen untuk ditambahkan kedalam antrian
-            scanf(" %[^\n]", doc);
+            scanf(" %[^\n]", data);
 
-            enqueue_LL(&q_ll, doc); // memanggil fungsi enqueue
+            enqueue_ll(&q_ll, data); // memanggil fungsi enqueue
             break;
         }
         case 2:
         {
-            dequeue_LL(&q_ll);
+            dequeue_ll(&q_ll);
             break;
         }
         case 3:
         {
-            display_LL(&q_ll);
+            display_ll(&q_ll);
             break;
         }
         case 4:
         {
-            peek_LL(&q_ll);
+            peek_ll(&q_ll);
             break;
         }
         case 5:
         {
+            clear_ll(&q_ll);
             printf("\n===== Terima Kasih Telah Menggunakan Simulasi Ini =====\n");
             break;
         }
@@ -152,11 +160,13 @@ int main()
     int pilihan;
     do
     {
-        printf("\n===============================\n");
+        printf("\n===============================================\n");
         printf("Selamat Datang di Simulasi Antrian(String/LL)\n");
+        printf("===============================================\n");
         printf("1. Simulasi Dengan String\n");
         printf("2. Simulasi Dengan Linked List\n");
-        printf("3. Keluar Program");
+        printf("3. Keluar Program\n");
+        printf("-----------------------------------------------\n");
 
         printf("Masukkan Simulasi yang Ingin Anda Coba: ");
         // validasi apakah user menginpuy menu yang benar sebelum masuk switch
@@ -183,7 +193,7 @@ int main()
             break;
 
         case 2:
-            menu_LL();
+            menu_ll();
             break;
 
         case 3:

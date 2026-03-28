@@ -3,6 +3,11 @@
 #include <stdlib.h>
 #include "queue.h"
 
+/*
+=================================
+          QUEUE ARRAY
+=================================
+*/
 // inisialisasi awal front dan rear
 void init_arr(QueueArr *q_arr)
 {
@@ -90,6 +95,7 @@ void dequeue_arr(QueueArr *q_arr)
         printf("Antrian telah kosong, tidak ada dokumen lagi yang perlu di print\n");
         return;
     }
+
     printf("\n===============================\n");
     printf("Mencetak dokumen: \"%s\"...\n", q_arr->data[q_arr->front]); // memberitahukan bahwa dokumen berhasil di dequeue
     printf("===============================\n");
@@ -148,7 +154,7 @@ void peek_arr(QueueArr *q_arr)
 */
 
 // Inisialisasi awal lingked list
-void init_LL(QueueLL *q_ll)
+void init_ll(QueueLL *q_ll)
 {
     // inisialisasi awal bahwa queue masih kosong
     q_ll->front = NULL;
@@ -157,13 +163,13 @@ void init_LL(QueueLL *q_ll)
 }
 
 // Fungsi cek antrian
-int isempty_LL(QueueLL *q_ll)
+int isempty_ll(QueueLL *q_ll)
 {
     return q_ll->front == NULL; // cek apakah fron bernilai NULL
 }
 
 // Fungsi menambahkan antrian (enqueue)
-void enqueue_LL(QueueLL *q_ll, const char *doc)
+void enqueue_ll(QueueLL *q_ll, const char *data)
 {
     NodeLL newnode = (NodeLL)malloc(sizeof(QueueNode)); // mengalokasikan memory di heap seukuran QueueNode
 
@@ -174,10 +180,10 @@ void enqueue_LL(QueueLL *q_ll, const char *doc)
         printf("\n===============================\n");
         return;
     }
-    strcpy(newnode->data, doc); // menyalin string input kedalam node
-    newnode->next = NULL;       // set next = NULL
+    strcpy(newnode->data, data); // menyalin string input kedalam node
+    newnode->next = NULL;        // set next = NULL
 
-    if (isempty_LL(q_ll)) // cek apakah queue kosong
+    if (isempty_ll(q_ll)) // cek apakah queue kosong
     {
         q_ll->front = q_ll->rear = newnode; // node pertama, front dan rear menunjuk ke node yang sama
     }
@@ -187,15 +193,15 @@ void enqueue_LL(QueueLL *q_ll, const char *doc)
         q_ll->rear = newnode;       // update rear ke node yang baru
     }
 
-    q_ll->size++;                               // size bertambah
-    printf("Dokumen %s masuk ke antrian", doc); // output sistem
+    q_ll->size++;                                // size bertambah
+    printf("Dokumen %s masuk ke antrian", data); // output sistem
     printf("\n===============================\n");
 }
 
 // Fungsi untuk mengeluarkan antrian
-void dequeue_LL(QueueLL *q_ll)
+void dequeue_ll(QueueLL *q_ll)
 {
-    if (isempty_LL(q_ll)) // cek antrian
+    if (isempty_ll(q_ll)) // cek antrian
     {
         printf("Antrian kosong!\n"); // ouput apabila antian kosong
         return;                      // keluar dari fungsi
@@ -217,9 +223,9 @@ void dequeue_LL(QueueLL *q_ll)
 }
 
 // Fungsi untuk menampilkan list antrian
-void display_LL(QueueLL *q_ll)
+void display_ll(QueueLL *q_ll)
 {
-    if (isempty_LL(q_ll)) // cek apakah antrian kosong atau tidak
+    if (isempty_ll(q_ll)) // cek apakah antrian kosong atau tidak
     {
         printf("Antrian kosong!\n"); // ouput apabila antian kosong
         return;                      // keluar dari fungsi
@@ -241,9 +247,9 @@ void display_LL(QueueLL *q_ll)
 }
 
 // Fungsi untuk menampilkan elemen yang akan di cetak
-void peek_LL(QueueLL *q_ll)
+void peek_ll(QueueLL *q_ll)
 {
-    if (isempty_LL(q_ll))
+    if (isempty_ll(q_ll))
     {
         printf("\n===============================\n");
         printf("Antrian telah dicetak semuanya\n"); // output jika antrian telah kosong
@@ -257,4 +263,20 @@ void peek_LL(QueueLL *q_ll)
         printf("Dokumen berikutnya : %s\n", q_ll->front->data); // menampilkan dokumen yang akan dicetak
         printf("\n===============================\n");
     }
+}
+
+// mencegah memory leaks
+void clear_ll(QueueLL *q_ll)
+{
+    NodeLL temp; // deklarasi temp bertipe NodeLL
+
+    while (q_ll->front != NULL) // loop sampai ketemu NULL
+    {
+        temp = q_ll->front;              // temp menyimpan alamat front
+        q_ll->front = q_ll->front->next; // front menyimpan alamat front next
+        free(temp);                      // menghapus data yang tersimpan oleh temp dari memory
+    }
+
+    q_ll->rear = NULL; // set rear = NULL
+    q_ll->size = 0;    // reset size
 }
