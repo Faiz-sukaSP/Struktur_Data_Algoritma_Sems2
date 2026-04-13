@@ -71,11 +71,12 @@ void displayList(listnode head)
 
     while (curr != NULL && count < 5)
     {
-        printf("%s", curr->kata);
-        curr = curr->next;
+        printf("%d. %s\n", count + 1, curr->kata);
+        curr = curr->next; // berpindah ke node selanjutnya
         count++;
     }
-    printf("Totalnya = (%d)\n", total);
+    printf("Totalnya = %d kata\n", total);
+    printf("--------------------------------\n\n");
 }
 
 // membebaskan memori pada lingked list
@@ -151,9 +152,7 @@ void inorderStat(treenode root)
     inorderStat(root->left);
 
     int total = countList(root->head);
-    printf("Data dengan huruf awal \"%c\" berjumlah = %d\n", root->huruf, total);
-    displayList(root->head); // menampilkan setiap data
-
+    printf("%-5c %d\n", root->huruf, total);
     inorderStat(root->right); // setelah root sebelah kiri habis dicetak maka root berpindah ke kanan
 }
 
