@@ -13,7 +13,6 @@ typedef struct
 
 // DEKLARASI STRUCT ALAMAT MEMORI PADA AWAL MENGGUNAKAN "nodeptr" SEHINGGA NEXT BUKAN LAGI "STRUCT *NODE"
 typedef struct stacknode *stack_nodeptr;
-
 // DEKLARASI STRUCK STACKNODE
 typedef struct stacknode
 {

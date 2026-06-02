@@ -43,7 +43,7 @@ void being_served_arr(QueueArr *q_arr1, QueueArr *q_arr2);              // menam
 */
 
 typedef struct QueueNode *NodeLL;
-typedef struct QueueNode
+typedef struct
 {
     char data[100];
     NodeLL next;

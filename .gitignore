@@ -14,3 +14,6 @@
 
 # backup / zip
 *.zip
+
+# Format soal
+*.pdf
