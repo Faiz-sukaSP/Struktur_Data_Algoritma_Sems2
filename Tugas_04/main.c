@@ -1,5 +1,6 @@
 #include "Standard_Sorting.h"
 
+//
 int main()
 {
     int n;
@@ -22,20 +23,23 @@ int main()
 
     generateData(data, n);
 
-    printf("Random data dalam array selesai\n");
+    printf("Pengacakan data dalam array selesai\n");
 
     do
     {
-        printf("\nPilihan:\n");
-        printf("1) Mengurutkan data dengan INSERTION SORT\n");
-        printf("2) Mengurutkan data dengan BUBBLE SORT\n");
-        printf("3) Mengurutkan data dengan SELECTION SORT\n");
-        printf("4) Mengurutkan data dengan MERGE SORT\n");
-        printf("5) Mengurutkan data dengan QUICK SORT\n");
-        printf("6) Random ulang data dalam array\n");
-        printf("7) Selesai\n");
+        printf("====================================");
+        printf("\n       Selamat Datang     \n");
+        printf("Silahkan pilih algoritma pengurutan");
+        printf("\n====================================\n");
+        printf("1. INSERTION SORT\n");
+        printf("2. BUBBLE SORT\n");
+        printf("3. SELECTION SORT\n");
+        printf("4. MERGE SORT\n");
+        printf("5. QUICK SORT\n");
+        printf("6. Acak ulang data dalam array\n");
+        printf("7). Selesai\n");
 
-        printf("Pilihan anda : ");
+        printf("Masukkan pilihan anda : ");
         scanf("%d", &pilihan);
 
         if (pilihan >= 1 && pilihan <= 5)
@@ -76,7 +80,7 @@ int main()
                 (double)(end - start) / CLOCKS_PER_SEC;
 
             printf("\nData Terurut:\n");
-            printArray(temp, n);
+            DisplayArrInts(temp, n);
 
             printf("\nJumlah Perbandingan : %lld\n",
                    comparison);
