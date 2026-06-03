@@ -1,15 +1,21 @@
 #include "Standard_Sorting.h"
 
+/*
+==================================
+    VARIABEL GLOBAL STATISTIK
+==================================
+*/
+
 long long comparison = 0;
 long long swapCount = 0;
 
 /*
 ======================
-    HELPER INTERNAL
+    FUNGSI PEMBANTU
 ======================
 */
 
-// Fungsi untuk menukarkan nilai dari dua buah integer
+// Menukar dua bilangan integer
 static void swapInt(int *a, int *b)
 {
     int temp = *a;
@@ -17,18 +23,19 @@ static void swapInt(int *a, int *b)
     *b = temp;
 }
 
-// Fungsi untuk menduplikasi seluruh isi array ke array yang baru
+// Menyalin isi array
 void copyArray(const int source[], int destination[], int n)
 {
     memcpy(destination, source, n * sizeof(int));
 }
 
 /*
-==========================
-   GENERATE DATA RANDOM
-==========================
+===========================
+    GENERATE DATA RANDOM
+===========================
 */
 
+// Mengisi array dengan angka acak
 void generateData(int arr[], int n)
 {
     for (int i = 0; i < n; i++)
@@ -38,19 +45,18 @@ void generateData(int arr[], int n)
 }
 
 /*
-    ========================
-        STANDART SORTING
-    ========================
+=====================
+    INSERTION SORT
+=====================
 */
 
-// Insertion sort
 void insertionSort(int arr[], int n)
 {
     int i, j, key;
 
     for (i = 1; i < n; i++)
     {
-        key = arr[i]; // nilai i menjadi kunci
+        key = arr[i];
         j = i - 1;
 
         while (j >= 0)
@@ -68,11 +74,17 @@ void insertionSort(int arr[], int n)
                 break;
             }
         }
+
         arr[j + 1] = key;
     }
 }
 
-// Buble sort
+/*
+===================
+    BUBBLE SORT
+===================
+*/
+
 void bubbleSort(int arr[], int n)
 {
     int i, j, tertukar;
@@ -80,27 +92,36 @@ void bubbleSort(int arr[], int n)
     for (i = 0; i < n - 1; i++)
     {
         tertukar = 0;
+
         for (j = 0; j < n - 1 - i; j++)
         {
+            comparison++;
+
             if (arr[j] > arr[j + 1])
             {
                 swapInt(&arr[j], &arr[j + 1]);
+
+                swapCount++;
                 tertukar = 1;
             }
         }
-        // pengecekan apabila tidak ada lagi pertukaran
+
         if (!tertukar)
+        {
             break;
+        }
     }
 }
 
-// Selection sort
+/*
+=====================
+    SELECTION SORT
+=====================
+*/
+
 void selectionSort(int arr[], int n)
 {
-    int i;
-    int j;
-    int minIndex;
-    int temp;
+    int i, j, minIndex, temp;
 
     for (i = 0; i < n - 1; i++)
     {
@@ -128,19 +149,24 @@ void selectionSort(int arr[], int n)
 }
 
 /*
-    ========================
-        ADVANCE SORTING
-    ========================
+==================
+    MERGE SORT
+==================
 */
 
-// Fungsi untuk menggabungkan (Merge)
 static void merge(int arr[], int left, int mid, int right)
 {
     int n1 = mid - left + 1;
     int n2 = right - mid;
 
-    int *L = (int *)malloc(n1 * sizeof(int));
-    int *R = (int *)malloc(n2 * sizeof(int));
+    int *L = malloc(n1 * sizeof(int));
+    int *R = malloc(n2 * sizeof(int));
+
+    if (L == NULL || R == NULL)
+    {
+        printf("Gagal alokasi memori.\n");
+        exit(EXIT_FAILURE);
+    }
 
     int i;
     int j;
@@ -192,8 +218,9 @@ static void merge(int arr[], int left, int mid, int right)
     free(R);
 }
 
-// Merge sort
-void mergeSort(int arr[], int left, int right)
+void mergeSort(int arr[],
+               int left,
+               int right)
 {
     if (left < right)
     {
@@ -206,15 +233,22 @@ void mergeSort(int arr[], int left, int right)
     }
 }
 
-// Membagi data
-static int partition(int arr[], int low, int high)
+/*
+=================
+    QUICK SORT
+=================
+*/
+
+static int partition(int arr[],
+                     int low,
+                     int high)
 {
     int pivot = arr[high];
 
     int i = low - 1;
-    int j, temp;
+    int temp;
 
-    for (j = low; j < high; j++)
+    for (int j = low; j < high; j++)
     {
         comparison++;
 
@@ -222,80 +256,220 @@ static int partition(int arr[], int low, int high)
         {
             i++;
 
-            temp = arr[i];
-            arr[i] = arr[j];
-            arr[j] = temp;
+            if (i != j)
+            {
+                temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
 
-            swapCount++;
+                swapCount++;
+            }
         }
     }
 
-    temp = arr[i + 1];
-    arr[i + 1] = arr[high];
-    arr[high] = temp;
+    if (i + 1 != high)
+    {
+        temp = arr[i + 1];
+        arr[i + 1] = arr[high];
+        arr[high] = temp;
 
-    swapCount++;
+        swapCount++;
+    }
 
     return i + 1;
 }
 
-// Quick Sort
-void quickSort(int arr[], int low, int high)
+void quickSort(int arr[],
+               int low,
+               int high)
 {
     if (low < high)
     {
-        int pivotIndex = partition(arr, low, high);
+        int pivotIndex =
+            partition(arr, low, high);
 
-        quickSort(arr, low, pivotIndex - 1);
-        quickSort(arr, pivotIndex + 1, high);
+        quickSort(arr,
+                  low,
+                  pivotIndex - 1);
+
+        quickSort(arr,
+                  pivotIndex + 1,
+                  high);
     }
 }
 
 /*
-==================================
-   Tampilan & statistik sorting
-==================================
- */
+=======================
+    TAMPILKAN ARRAY
+=======================
+*/
 
-// Menampilkan isi array integer ke layar
-void DisplayArrInt(int arr[], int n, int jumlahTampil)
+void DisplayArrInt(int arr[],
+                   int n,
+                   int jumlahTampil)
 {
-    int tampil, i;
+    int tampil =
+        (n < jumlahTampil)
+            ? n
+            : jumlahTampil;
 
-    // validasi jika data kosong
-    if (n <= 0)
+    for (int i = 0; i < tampil; i++)
     {
-        printf("(tidak ada data)\n");
+        printf("%10d", arr[i]);
+
+        if ((i + 1) % 10 == 0)
+        {
+            printf("\n");
+        }
+    }
+
+    printf("\n");
+
+    if (n > jumlahTampil)
+    {
+        printf("... (%d data tidak ditampilkan)\n",
+               n - jumlahTampil);
+    }
+}
+
+/*
+======================
+    RINGKASAN HASIL
+======================
+*/
+
+void tampilkanRingkasan(
+    const char *namaAlgoritma,
+    int n,
+    double waktuMs)
+{
+    printf("\n====================================\n");
+    printf("Algoritma           : %s\n",
+           namaAlgoritma);
+
+    printf("Jumlah Data         : %d\n", n);
+
+    printf("Jumlah Perbandingan : %lld\n",
+           comparison);
+
+    printf("Jumlah Pertukaran   : %lld\n",
+           swapCount);
+
+    printf("Waktu Eksekusi      : %.3f ms\n",
+           waktuMs);
+
+    printf("====================================\n");
+}
+
+/*
+===========
+    MENU
+===========
+*/
+
+void menuSorting(void)
+{
+    int n;
+    int pilihan;
+
+    srand(time(NULL));
+
+    printf("Masukkan jumlah data (n): ");
+    scanf("%d", &n);
+
+    while (n <= 1 || n > 500000)
+    {
+        printf("Input harus 1 < n <= 500000\n");
+        scanf("%d", &n);
+    }
+
+    int *data = malloc(n * sizeof(int));
+    int *temp = malloc(n * sizeof(int));
+
+    if (data == NULL || temp == NULL)
+    {
+        printf("Gagal alokasi memori.\n");
         return;
     }
 
-    // menentukan jumlah data yang ditampilkan
-    tampil = (n < jumlahTampil) ? n : jumlahTampil;
-    // menampilkan data
-    for (i = 0; i < tampil; i++)
+    generateData(data, n);
+
+    do
     {
-        printf("%5d", arr[i]);
-        if ((i + 1) % 10 == 0)
-            printf("\n");
-    }
-    // merapikan output jika baris terakhir pindah baris
-    if (tampil % 10 != 0)
-        printf("\n");
+        printf("\n====================================\n");
+        printf("1. Insertion Sort\n");
+        printf("2. Bubble Sort\n");
+        printf("3. Selection Sort\n");
+        printf("4. Merge Sort\n");
+        printf("5. Quick Sort\n");
+        printf("6. Acak Ulang Data\n");
+        printf("7. Keluar\n");
+        printf("====================================\n");
 
-    // memberitahukan jumlah data yang tidak ditampilkan
-    if (n > jumlahTampil)
-        printf("... (%d data tidak ditampilkan)\n", n - jumlahTampil);
+        printf("Pilihan : ");
+        scanf("%d", &pilihan);
 
-    // menampilkan jumlah total data
-    printf("Total data: %d\n", n);
-}
+        if (pilihan >= 1 && pilihan <= 5)
+        {
+            copyArray(data, temp, n);
 
-// output statistik program
-void tampilkanRingkasan(const char *namaAlgoritma, int n, double waktuMs)
-{
-    printf("\n================================\n");
-    printf("Algoritma  : %s\n", namaAlgoritma);
-    printf("Jumlah data: %d\n", n);
-    printf("Waktu      : %.2f ms\n", waktuMs);
-    printf("================================\n");
+            comparison = 0;
+            swapCount = 0;
+
+            const char *namaAlgoritma;
+
+            clock_t start = clock();
+
+            switch (pilihan)
+            {
+            case 1:
+                namaAlgoritma = "Insertion Sort";
+                insertionSort(temp, n);
+                break;
+
+            case 2:
+                namaAlgoritma = "Bubble Sort";
+                bubbleSort(temp, n);
+                break;
+
+            case 3:
+                namaAlgoritma = "Selection Sort";
+                selectionSort(temp, n);
+                break;
+
+            case 4:
+                namaAlgoritma = "Merge Sort";
+                mergeSort(temp, 0, n - 1);
+                break;
+
+            default:
+                namaAlgoritma = "Quick Sort";
+                quickSort(temp, 0, n - 1);
+            }
+
+            clock_t end = clock();
+
+            double waktuMs =
+                ((double)(end - start) * 1000.0) / CLOCKS_PER_SEC;
+
+            printf("\nData Setelah Sorting:\n");
+            DisplayArrInt(temp, n, 100);
+
+            tampilkanRingkasan(
+                namaAlgoritma,
+                n,
+                waktuMs);
+        }
+
+        else if (pilihan == 6)
+        {
+            generateData(data, n);
+
+            printf("Data berhasil diacak ulang.\n");
+        }
+
+    } while (pilihan != 7);
+
+    free(data);
+    free(temp);
 }
