@@ -1,13 +1,4 @@
-#include "Standard_Sorting.h"
-
-/*
-==================================
-    VARIABEL GLOBAL STATISTIK
-==================================
-*/
-
-long long comparison = 0;
-long long swapCount = 0;
+#include "function_string.h"
 
 /*
 ======================
@@ -15,33 +6,10 @@ long long swapCount = 0;
 ======================
 */
 
-// Menukar dua bilangan integer
-static void swapInt(int *a, int *b)
-{
-    int temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
 // Menyalin isi array
-void copyArray(const int source[], int destination[], int n)
+void copyArray(const int src[], int dst[], int n)
 {
-    memcpy(destination, source, n * sizeof(int));
-}
-
-/*
-===========================
-    GENERATE DATA RANDOM
-===========================
-*/
-
-// Mengisi array dengan angka acak
-void generateData(int arr[], int n)
-{
-    for (int i = 0; i < n; i++)
-    {
-        arr[i] = rand();
-    }
+    memcpy(dst, src, n * sizeof(int));
 }
 
 /*
@@ -50,32 +18,35 @@ void generateData(int arr[], int n)
 =====================
 */
 
-void insertionSort(int arr[], int n)
+void insertionSort(char arr[][MAX_WORD_LEN], int n)
 {
-    int i, j, key;
+    int i, j;
+    char key;
 
     for (i = 1; i < n; i++)
     {
+        // deklarasi variabel awal
         key = arr[i];
         j = i - 1;
 
         while (j >= 0)
         {
-            comparison++;
+            comparison++; // menghitung perbandingan
 
-            if (arr[j] > key)
+            if (strcmp(arr[j], key) > 0)
             {
-                arr[j + 1] = arr[j];
-                swapCount++;
-                j--;
+                // pertukaran (j + 1 = j) karena arr j lebih besar dari key
+                strcpy(arr[j + 1], arr[j]);
+                swapCount++; // menghitung pertukaran
+                j--;         // mundur
             }
             else
             {
                 break;
             }
         }
-
-        arr[j + 1] = key;
+        // arr j + 1 sekarang sama dengan key
+        strcpy(arr[j + 1], key);
     }
 }
 
@@ -85,63 +56,72 @@ void insertionSort(int arr[], int n)
 ===================
 */
 
-void bubbleSort(int arr[], int n)
+void bubbleSort(char arr[][MAX_WORD_LEN], int n)
 {
-    int i, j, tertukar;
+    int i, j, swapped;
+    char temp[MAX_WORD_LEN]; // temp seukuran MAX_WORD_LEN
 
     for (i = 0; i < n - 1; i++)
     {
-        tertukar = 0;
-
+        // deklarasi nilai tertukar awal = 0
+        swapped = 0;
         for (j = 0; j < n - 1 - i; j++)
         {
-            comparison++;
+            comparison++; // menghitung perbandingan
 
-            if (arr[j] > arr[j + 1])
+            // lakukan perbandingan
+            if (strcmp(arr[j], arr[j + 1]) > 0)
             {
-                swapInt(&arr[j], &arr[j + 1]);
+                // menukar arr j + 1 dengan arr j
+                strcpy(arr[j], arr[j + 1]);
 
+                // bertambah setiap perbandingan
                 swapCount++;
-                tertukar = 1;
+                swapped = 1;
             }
-        }
 
-        if (!tertukar)
-        {
-            break;
+            // jika tidak melakukan pertukaran
+            if (!swapped)
+                break;
         }
     }
 }
-
 /*
 =====================
     SELECTION SORT
 =====================
 */
 
-void selectionSort(int arr[], int n)
+void selectionSort(int arr[][MAX_WORD_LEN], int n)
 {
-    int i, j, minIndex, temp;
+    int i, j;
+    char minIndex;
+    char temp[MAX_WORD_LEN];
 
     for (i = 0; i < n - 1; i++)
     {
+        // data pertama menjadi index terkecil
         minIndex = i;
 
+        // loop for langsung ke data kedua (awal)
         for (j = i + 1; j < n; j++)
         {
+            // bertambah apabila masuk loop
             comparison++;
 
-            if (arr[j] < arr[minIndex])
+            // perbandingan
+            if (strcmp(arr[minIndex], arr[j]))
             {
-                minIndex = j;
+                // jika kondisi if benar maka minIndex menerima nilai j
+                strcpy(minIndex, j);
             }
         }
 
         if (minIndex != i)
         {
-            temp = arr[i];
-            arr[i] = arr[minIndex];
-            arr[minIndex] = temp;
+            strcpy(temp, arr[i]);
+            strcpy(arr[i], arr[minIndex]);
+            strcpy(arr[minIndex], temp);
 
             swapCount++;
         }
@@ -154,6 +134,7 @@ void selectionSort(int arr[], int n)
 ==================
 */
 
+// Fungsi untuk menggabungkan dua Sub-array yang sudah ter urut
 static void merge(int arr[], int left, int mid, int right)
 {
     int n1 = mid - left + 1;
@@ -168,9 +149,7 @@ static void merge(int arr[], int left, int mid, int right)
         exit(EXIT_FAILURE);
     }
 
-    int i;
-    int j;
-    int k;
+    int i, j, k;
 
     for (i = 0; i < n1; i++)
     {
@@ -239,9 +218,8 @@ void mergeSort(int arr[],
 =================
 */
 
-static int partition(int arr[],
-                     int low,
-                     int high)
+// memilih bagian pivot dan membagi data menjadi dua
+static int partition(int arr[], int low, int high)
 {
     int pivot = arr[high];
 
@@ -279,22 +257,13 @@ static int partition(int arr[],
     return i + 1;
 }
 
-void quickSort(int arr[],
-               int low,
-               int high)
+void quickSort(int arr[], int low, int high)
 {
     if (low < high)
     {
-        int pivotIndex =
-            partition(arr, low, high);
-
-        quickSort(arr,
-                  low,
-                  pivotIndex - 1);
-
-        quickSort(arr,
-                  pivotIndex + 1,
-                  high);
+        int pivotIndex = partition(arr, low, high);
+        quickSort(arr, low, pivotIndex - 1);
+        quickSort(arr, pivotIndex + 1, high);
     }
 }
 
@@ -304,14 +273,9 @@ void quickSort(int arr[],
 =======================
 */
 
-void DisplayArrInt(int arr[],
-                   int n,
-                   int jumlahTampil)
+void DisplayArrInt(int arr[], int n, int jumlahTampil)
 {
-    int tampil =
-        (n < jumlahTampil)
-            ? n
-            : jumlahTampil;
+    int tampil = (n < jumlahTampil) ? n : jumlahTampil;
 
     for (int i = 0; i < tampil; i++)
     {
@@ -338,26 +302,14 @@ void DisplayArrInt(int arr[],
 ======================
 */
 
-void tampilkanRingkasan(
-    const char *namaAlgoritma,
-    int n,
-    double waktuMs)
+void tampilkanRingkasan(const char *namaAlgoritma, int n, double waktuMs)
 {
     printf("\n====================================\n");
-    printf("Algoritma           : %s\n",
-           namaAlgoritma);
-
+    printf("Algoritma           : %s\n", namaAlgoritma);
     printf("Jumlah Data         : %d\n", n);
-
-    printf("Jumlah Perbandingan : %lld\n",
-           comparison);
-
-    printf("Jumlah Pertukaran   : %lld\n",
-           swapCount);
-
-    printf("Waktu Eksekusi      : %.3f ms\n",
-           waktuMs);
-
+    printf("Jumlah Perbandingan : %lld\n", comparison);
+    printf("Jumlah Pertukaran   : %lld\n", swapCount);
+    printf("Waktu Eksekusi      : %.3f ms\n", waktuMs);
     printf("====================================\n");
 }
 
@@ -455,16 +407,12 @@ void menuSorting(void)
             printf("\nData Setelah Sorting:\n");
             DisplayArrInt(temp, n, 100);
 
-            tampilkanRingkasan(
-                namaAlgoritma,
-                n,
-                waktuMs);
+            tampilkanRingkasan(namaAlgoritma, n, waktuMs);
         }
 
         else if (pilihan == 6)
         {
             generateData(data, n);
-
             printf("Data berhasil diacak ulang.\n");
         }
 

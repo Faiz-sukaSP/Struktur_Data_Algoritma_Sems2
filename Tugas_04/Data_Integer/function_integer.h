@@ -1,5 +1,5 @@
-#ifndef STANDARD_SORTING_H
-#define STANDARD_SORTING_H
+#ifndef FUNCTION_INTEGER_H
+#define FUNCTION_INTEGER_H
 
 #include <stdio.h>
 #include <stdlib.h>
