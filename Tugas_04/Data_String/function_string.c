@@ -7,9 +7,9 @@
 */
 
 // Menyalin isi array
-void copyArray(const int src[], int dst[], int n)
+void copyArray(const char src[][MAX_WORD_LEN], char dst[][MAX_WORD_LEN], int n)
 {
-    memcpy(dst, src, n * sizeof(int));
+    memcpy(dst, src, n * MAX_WORD_LEN * sizeof(char));
 }
 
 /*
@@ -21,18 +21,17 @@ void copyArray(const int src[], int dst[], int n)
 void insertionSort(char arr[][MAX_WORD_LEN], int n)
 {
     int i, j;
-    char key;
+    char key[MAX_WORD_LEN];
 
     for (i = 1; i < n; i++)
     {
-        // deklarasi variabel awal
-        key = arr[i];
+        // deklarasi awal
+        strcpy(key, arr[i]);
         j = i - 1;
 
         while (j >= 0)
         {
             comparison++; // menghitung perbandingan
-
             if (strcmp(arr[j], key) > 0)
             {
                 // pertukaran (j + 1 = j) karena arr j lebih besar dari key
@@ -72,18 +71,19 @@ void bubbleSort(char arr[][MAX_WORD_LEN], int n)
             // lakukan perbandingan
             if (strcmp(arr[j], arr[j + 1]) > 0)
             {
-                // menukar arr j + 1 dengan arr j
+                // tukar
+                strcpy(temp, arr[j]);
                 strcpy(arr[j], arr[j + 1]);
+                strcpy(arr[j + 1], temp);
 
                 // bertambah setiap perbandingan
                 swapCount++;
                 swapped = 1;
             }
-
-            // jika tidak melakukan pertukaran
-            if (!swapped)
-                break;
         }
+        // jika tidak melakukan pertukaran
+        if (!swapped)
+            break;
     }
 }
 /*
@@ -92,10 +92,10 @@ void bubbleSort(char arr[][MAX_WORD_LEN], int n)
 =====================
 */
 
-void selectionSort(int arr[][MAX_WORD_LEN], int n)
+void selectionSort(char arr[][MAX_WORD_LEN], int n)
 {
     int i, j;
-    char minIndex;
+    int minIndex;
     char temp[MAX_WORD_LEN];
 
     for (i = 0; i < n - 1; i++)
@@ -110,10 +110,10 @@ void selectionSort(int arr[][MAX_WORD_LEN], int n)
             comparison++;
 
             // perbandingan
-            if (strcmp(arr[minIndex], arr[j]))
+            if (strcmp(arr[j], arr[minIndex]) < 0)
             {
                 // jika kondisi if benar maka minIndex menerima nilai j
-                strcpy(minIndex, j);
+                minIndex = j;
             }
         }
 
@@ -122,7 +122,6 @@ void selectionSort(int arr[][MAX_WORD_LEN], int n)
             strcpy(temp, arr[i]);
             strcpy(arr[i], arr[minIndex]);
             strcpy(arr[minIndex], temp);
-
             swapCount++;
         }
     }
