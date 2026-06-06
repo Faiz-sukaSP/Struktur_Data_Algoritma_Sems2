@@ -1,5 +1,9 @@
 #include "function_string.h"
 
+// Menghitung berapa kali komparasi dan pertukaran
+extern long long comparison;
+extern long long swapCount;
+
 /*
 ======================
     FUNGSI PEMBANTU
@@ -13,11 +17,46 @@ void copyArray(const char src[][MAX_WORD_LEN], char dst[][MAX_WORD_LEN], int n)
 }
 
 /*
+====================
+    BACA FILE
+====================
+*/
+// Membaca kata - kata dari sebuah file teks dan menyimpannya ke dalam array 2D.
+int readFile(const char *namaFile, char data[][MAX_WORD_LEN])
+{
+    FILE *fp;
+    int jumlahData = 0;
+
+    fp = fopen(namaFile, "r");
+
+    if (fp == NULL)
+    {
+        printf("Gagal membuka file %s\n", namaFile);
+        return -1;
+    }
+
+    while (fscanf(fp, "%99s", data[jumlahData]) == 1)
+    {
+        jumlahData++;
+
+        if (jumlahData >= MAX_WORD)
+        {
+            break;
+        }
+    }
+
+    fclose(fp);
+
+    return jumlahData;
+}
+
+/*
 =====================
     INSERTION SORT
 =====================
 */
 
+// Fungsi Insertion Sort
 void insertionSort(char arr[][MAX_WORD_LEN], int n)
 {
     int i, j;
@@ -134,13 +173,13 @@ void selectionSort(char arr[][MAX_WORD_LEN], int n)
 */
 
 // Fungsi untuk menggabungkan dua Sub-array yang sudah ter urut
-static void merge(int arr[], int left, int mid, int right)
+static void merge(char arr[][MAX_WORD_LEN], int left, int mid, int right)
 {
     int n1 = mid - left + 1;
     int n2 = right - mid;
 
-    int *L = malloc(n1 * sizeof(int));
-    int *R = malloc(n2 * sizeof(int));
+    char (*L)[MAX_WORD_LEN] = malloc(n1 * sizeof(*L));
+    char (*R)[MAX_WORD_LEN] = malloc(n2 * sizeof(*R));
 
     if (L == NULL || R == NULL)
     {
@@ -152,12 +191,12 @@ static void merge(int arr[], int left, int mid, int right)
 
     for (i = 0; i < n1; i++)
     {
-        L[i] = arr[left + i];
+        strcpy(L[i], arr[left + i]);
     }
 
     for (j = 0; j < n2; j++)
     {
-        R[j] = arr[mid + 1 + j];
+        strcpy(R[j], arr[mid + 1 + j]);
     }
 
     i = 0;
@@ -168,13 +207,13 @@ static void merge(int arr[], int left, int mid, int right)
     {
         comparison++;
 
-        if (L[i] <= R[j])
+        if (strcmp(L[i], R[j]) <= 0)
         {
-            arr[k++] = L[i++];
+            strcpy(arr[k++], L[i++]);
         }
         else
         {
-            arr[k++] = R[j++];
+            strcpy(arr[k++], R[j++]);
         }
 
         swapCount++;
@@ -182,13 +221,13 @@ static void merge(int arr[], int left, int mid, int right)
 
     while (i < n1)
     {
-        arr[k++] = L[i++];
+        strcpy(arr[k++], L[i++]);
         swapCount++;
     }
 
     while (j < n2)
     {
-        arr[k++] = R[j++];
+        strcpy(arr[k++], R[j++]);
         swapCount++;
     }
 
@@ -196,9 +235,7 @@ static void merge(int arr[], int left, int mid, int right)
     free(R);
 }
 
-void mergeSort(int arr[],
-               int left,
-               int right)
+void mergeSort(char arr[][MAX_WORD_LEN], int left, int right)
 {
     if (left < right)
     {
@@ -218,45 +255,48 @@ void mergeSort(int arr[],
 */
 
 // memilih bagian pivot dan membagi data menjadi dua
-static int partition(int arr[], int low, int high)
+static int partition(char arr[][MAX_WORD_LEN], int low, int high)
 {
-    int pivot = arr[high];
+    char pivot[MAX_WORD_LEN];
+    strcpy(pivot, arr[high]); // Memilih elemen terakhir sebagai pivot
 
-    int i = low - 1;
-    int temp;
+    int i = low - 1; // Indeks elemen terkecil
+    char temp[MAX_WORD_LEN];
 
     for (int j = low; j < high; j++)
     {
         comparison++;
 
-        if (arr[j] < pivot)
+        // Jika elemen saat ini lebih kecil dari pivot secara alfabet
+        if (strcmp(arr[j], pivot) < 0)
         {
             i++;
 
+            // Tukar arr[i] dan arr[j] agar elemen yang lebih kecil berada di kiri
             if (i != j)
             {
-                temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
+                strcpy(temp, arr[i]);
+                strcpy(arr[i], arr[j]);
+                strcpy(arr[j], temp);
 
                 swapCount++;
             }
         }
     }
-
+    // Tempatkan pivot di posisi yang benar di antara elemen kecil dan besar
     if (i + 1 != high)
     {
-        temp = arr[i + 1];
-        arr[i + 1] = arr[high];
-        arr[high] = temp;
-
+        strcpy(temp, arr[i + 1]);
+        strcpy(arr[i + 1], arr[high]);
+        strcpy(arr[high], temp);
         swapCount++;
     }
 
     return i + 1;
 }
 
-void quickSort(int arr[], int low, int high)
+// Fungsi Quick Sort
+void quickSort(char arr[][MAX_WORD_LEN], int low, int high)
 {
     if (low < high)
     {
@@ -272,14 +312,16 @@ void quickSort(int arr[], int low, int high)
 =======================
 */
 
-void DisplayArrInt(int arr[], int n, int jumlahTampil)
+void DisplayArrString(char arr[][MAX_WORD_LEN], int n, int jumlahTampil)
 {
     int tampil = (n < jumlahTampil) ? n : jumlahTampil;
 
     for (int i = 0; i < tampil; i++)
     {
-        printf("%10d", arr[i]);
+        // menampilkan sebanyak 10 string
+        printf("%10s", arr[i]);
 
+        // enter setiap kata
         if ((i + 1) % 10 == 0)
         {
             printf("\n");
@@ -288,10 +330,10 @@ void DisplayArrInt(int arr[], int n, int jumlahTampil)
 
     printf("\n");
 
+    // menampilkan jumlah data yang tidak ditampilkan
     if (n > jumlahTampil)
     {
-        printf("... (%d data tidak ditampilkan)\n",
-               n - jumlahTampil);
+        printf("... (%d data tidak ditampilkan)\n", n - jumlahTampil);
     }
 }
 
@@ -301,7 +343,7 @@ void DisplayArrInt(int arr[], int n, int jumlahTampil)
 ======================
 */
 
-void tampilkanRingkasan(const char *namaAlgoritma, int n, double waktuMs)
+void displayStat(const char *namaAlgoritma, int n, double waktuMs)
 {
     printf("\n====================================\n");
     printf("Algoritma           : %s\n", namaAlgoritma);
@@ -318,24 +360,16 @@ void tampilkanRingkasan(const char *namaAlgoritma, int n, double waktuMs)
 ===========
 */
 
-void menuSorting(void)
+void mainMenu(void)
 {
-    int n;
     int pilihan;
+    int totalWord;
+    char nameFile[100];
 
-    srand(time(NULL));
-
-    printf("Masukkan jumlah data (n): ");
-    scanf("%d", &n);
-
-    while (n <= 1 || n > 500000)
-    {
-        printf("Input harus 1 < n <= 500000\n");
-        scanf("%d", &n);
-    }
-
-    int *data = malloc(n * sizeof(int));
-    int *temp = malloc(n * sizeof(int));
+    // Mengalokasikan memori dinamis di Heap untuk menghindari Stack Overflow
+    // karena ukuran array sangat besar (30.000 x 100 bytes = ~3 MB per array)
+    char (*data)[MAX_WORD_LEN] = malloc(MAX_WORD * sizeof(*data));
+    char (*temp)[MAX_WORD_LEN] = malloc(MAX_WORD * sizeof(*temp));
 
     if (data == NULL || temp == NULL)
     {
@@ -343,7 +377,26 @@ void menuSorting(void)
         return;
     }
 
-    generateData(data, n);
+    printf("====================================\n");
+    printf("      PROGRAM SORTING STRING\n");
+    printf("====================================\n");
+
+    printf("Masukkan nama file : ");
+    scanf("%99s", nameFile);
+
+    // Membaca file dilakukan SETELAH user menginput nama file
+    totalWord = readFile(nameFile, data);
+
+    if (totalWord <= 0)
+    {
+        printf("File gagal dibaca atau kosong.\n");
+        free(data);
+        free(temp);
+        return;
+    }
+
+    printf("File berhasil dibaca.\n");
+    printf("Jumlah data : %d kata\n", totalWord);
 
     do
     {
@@ -353,7 +406,7 @@ void menuSorting(void)
         printf("3. Selection Sort\n");
         printf("4. Merge Sort\n");
         printf("5. Quick Sort\n");
-        printf("6. Acak Ulang Data\n");
+        printf("6. Baca File Baru\n");
         printf("7. Keluar\n");
         printf("====================================\n");
 
@@ -362,61 +415,66 @@ void menuSorting(void)
 
         if (pilihan >= 1 && pilihan <= 5)
         {
-            copyArray(data, temp, n);
+            copyArray(data, temp, totalWord);
 
             comparison = 0;
             swapCount = 0;
 
             const char *namaAlgoritma;
-
             clock_t start = clock();
 
             switch (pilihan)
             {
             case 1:
                 namaAlgoritma = "Insertion Sort";
-                insertionSort(temp, n);
+                insertionSort(temp, totalWord);
                 break;
-
             case 2:
                 namaAlgoritma = "Bubble Sort";
-                bubbleSort(temp, n);
+                bubbleSort(temp, totalWord);
                 break;
-
             case 3:
                 namaAlgoritma = "Selection Sort";
-                selectionSort(temp, n);
+                selectionSort(temp, totalWord);
                 break;
-
             case 4:
                 namaAlgoritma = "Merge Sort";
-                mergeSort(temp, 0, n - 1);
+                mergeSort(temp, 0, totalWord - 1);
                 break;
-
-            default:
+            case 5:
                 namaAlgoritma = "Quick Sort";
-                quickSort(temp, 0, n - 1);
+                quickSort(temp, 0, totalWord - 1);
+                break;
             }
 
             clock_t end = clock();
-
-            double waktuMs =
-                ((double)(end - start) * 1000.0) / CLOCKS_PER_SEC;
+            double waktuMs = ((double)(end - start) * 1000.0) / CLOCKS_PER_SEC;
 
             printf("\nData Setelah Sorting:\n");
-            DisplayArrInt(temp, n, 100);
+            DisplayArrString(temp, totalWord, 100);
 
-            tampilkanRingkasan(namaAlgoritma, n, waktuMs);
+            displayStat(namaAlgoritma, totalWord, waktuMs);
         }
-
         else if (pilihan == 6)
         {
-            generateData(data, n);
-            printf("Data berhasil diacak ulang.\n");
-        }
+            printf("Masukkan nama file baru : ");
+            scanf("%99s", nameFile);
 
+            totalWord = readFile(nameFile, data);
+
+            if (totalWord <= 0)
+            {
+                printf("File gagal dibaca.\n");
+            }
+            else
+            {
+                printf("File berhasil dibaca.\n");
+                printf("Jumlah data : %d kata\n", totalWord);
+            }
+        }
     } while (pilihan != 7);
 
+    // Membebaskan memory dari heap
     free(data);
     free(temp);
 }

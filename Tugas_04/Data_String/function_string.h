@@ -1,5 +1,5 @@
+#ifndef FUNCTION_STRING_H
 #define FUNCTION_STRING_H
-#ifdef FUNCTION_STRING_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,8 +26,8 @@ extern long long swapCount;
 ============
 */
 // Fungsi untuk membaca file dan menyalin kata
-int readFile(char word[][MAX_WORD_LEN], const char *filename);
-void copyFile(char src[][MAX_WORD_LEN], const char dst[][MAX_WORD_LEN], int n);
+int readFile(const char *namaFile, char data[][MAX_WORD_LEN]);
+void copyArray(const char src[][MAX_WORD_LEN], char dst[][MAX_WORD_LEN], int n);
 
 /*
 =======================
@@ -38,11 +38,11 @@ void copyFile(char src[][MAX_WORD_LEN], const char dst[][MAX_WORD_LEN], int n);
 // Standard Sorting
 void insertionSort(char arr[][MAX_WORD_LEN], int n);
 void bubbleSort(char arr[][MAX_WORD_LEN], int n);
-void insertionSort(char arr[][MAX_WORD_LEN], int n);
+void selectionSort(char arr[][MAX_WORD_LEN], int n);
 
 // Advance Sorting
 void mergeSort(char arr[][MAX_WORD_LEN], int left, int right);
-void quickSort(char arr[][MAX_WORD_LEN], int higt, int low);
+void quickSort(char arr[][MAX_WORD_LEN], int low, int high);
 
 /*
 =======================
@@ -51,7 +51,7 @@ void quickSort(char arr[][MAX_WORD_LEN], int higt, int low);
 */
 
 void displayWord(char arr[][MAX_WORD_LEN], int n, int displayAmount);
-void displayStat(const char *algorithm, int n, double timeMs);
+void displayStat(const char *namaAlgoritma, int n, double waktuMs);
 void mainMenu(void);
 
 #endif
