@@ -1,8 +1,8 @@
 #include "function_string.h"
 
 // Menghitung berapa kali komparasi dan pertukaran
-extern long long comparison;
-extern long long swapCount;
+long long comparison = 0;
+long long swapCount = 0;
 
 /*
 ======================
@@ -31,7 +31,8 @@ int readFile(const char *namaFile, char data[][MAX_WORD_LEN])
 
     if (fp == NULL)
     {
-        printf("Gagal membuka file %s\n", namaFile);
+        printf("File gagal dibaca, periksa ulang data kamu\n");
+        printf("------------------------------------\n");
         return -1;
     }
 
@@ -243,7 +244,6 @@ void mergeSort(char arr[][MAX_WORD_LEN], int left, int right)
 
         mergeSort(arr, left, mid);
         mergeSort(arr, mid + 1, right);
-
         merge(arr, left, mid, right);
     }
 }
@@ -312,6 +312,7 @@ void quickSort(char arr[][MAX_WORD_LEN], int low, int high)
 =======================
 */
 
+// menampilkan data
 void DisplayArrString(char arr[][MAX_WORD_LEN], int n, int jumlahTampil)
 {
     int tampil = (n < jumlahTampil) ? n : jumlahTampil;
@@ -319,21 +320,22 @@ void DisplayArrString(char arr[][MAX_WORD_LEN], int n, int jumlahTampil)
     for (int i = 0; i < tampil; i++)
     {
         // menampilkan sebanyak 10 string
-        printf("%10s", arr[i]);
+        printf("%-20s", arr[i]);
 
         // enter setiap kata
-        if ((i + 1) % 10 == 0)
+        if ((i + 1) % 5 == 0)
         {
             printf("\n");
         }
     }
-
-    printf("\n");
+    printf("\n\n");
 
     // menampilkan jumlah data yang tidak ditampilkan
     if (n > jumlahTampil)
     {
+        printf("-------------------------------------\n");
         printf("... (%d data tidak ditampilkan)\n", n - jumlahTampil);
+        printf("-------------------------------------\n");
     }
 }
 
@@ -367,40 +369,52 @@ void mainMenu(void)
     char nameFile[100];
 
     // Mengalokasikan memori dinamis di Heap untuk menghindari Stack Overflow
-    // karena ukuran array sangat besar (30.000 x 100 bytes = ~3 MB per array)
     char (*data)[MAX_WORD_LEN] = malloc(MAX_WORD * sizeof(*data));
     char (*temp)[MAX_WORD_LEN] = malloc(MAX_WORD * sizeof(*temp));
 
+    // validasi malloc
     if (data == NULL || temp == NULL)
     {
+        printf("\n====================================\n");
         printf("Gagal alokasi memori.\n");
+        printf("====================================\n");
         return;
     }
 
-    printf("====================================\n");
+    printf("\n====================================\n");
     printf("      PROGRAM SORTING STRING\n");
     printf("====================================\n");
 
-    printf("Masukkan nama file : ");
-    scanf("%99s", nameFile);
-
-    // Membaca file dilakukan SETELAH user menginput nama file
-    totalWord = readFile(nameFile, data);
-
-    if (totalWord <= 0)
+    // loop untuk meminta user untuk menginput nama file hingga benar
+    while (1)
     {
-        printf("File gagal dibaca atau kosong.\n");
-        free(data);
-        free(temp);
-        return;
-    }
+        printf("Masukkan nama file : ");
+        scanf("%99s", nameFile);
+        printf("------------------------------------\n");
 
-    printf("File berhasil dibaca.\n");
-    printf("Jumlah data : %d kata\n", totalWord);
+        // isi file disimpan kedalam array
+        totalWord = readFile(nameFile, data);
+
+        // Jika readFile mengembalikan nilai > 0, artinya file sukses dibaca
+        if (totalWord > 0)
+        {
+            printf("\n====================================\n");
+            printf("File \"%s\" berhasil dibaca\n", nameFile);
+            printf("Jumlah data : %d kata\n", totalWord);
+            printf("====================================\n");
+            break; // Keluar dari loop input file, lanjut ke menu algoritma
+        }
+
+        // Jika gagal, loop akan berulang dan meminta input lagi
+        printf("\nSilakan masukkan kembali nama file dengan benar.\n");
+        printf("------------------------------------\n");
+    }
 
     do
     {
         printf("\n====================================\n");
+        printf("        Silahkan Pilih Algoritma    \n");
+        printf("====================================\n");
         printf("1. Insertion Sort\n");
         printf("2. Bubble Sort\n");
         printf("3. Selection Sort\n");
@@ -450,28 +464,40 @@ void mainMenu(void)
             clock_t end = clock();
             double waktuMs = ((double)(end - start) * 1000.0) / CLOCKS_PER_SEC;
 
-            printf("\nData Setelah Sorting:\n");
-            DisplayArrString(temp, totalWord, 100);
+            printf("\n                            ================================\n");
+            printf("                                   Data Setelah Sorting\n");
+            printf("                            ================================\n");
 
+            // memanggil fungsi yang telah di deklarasikan sebelumnya
+            DisplayArrString(temp, totalWord, 100);
             displayStat(namaAlgoritma, totalWord, waktuMs);
         }
         else if (pilihan == 6)
         {
+            char newFileName[100];
             printf("Masukkan nama file baru : ");
-            scanf("%99s", nameFile);
+            scanf("%99s", newFileName);
+            printf("------------------------------------\n");
 
-            totalWord = readFile(nameFile, data);
+            // Baca ke variabel sementara dulu agar jika gagal, data lama tidak hilang
+            int checkData = readFile(newFileName, data);
 
-            if (totalWord <= 0)
+            if (checkData <= 0)
             {
-                printf("File gagal dibaca.\n");
+                printf("------------------------------------\n");
+                printf("Gagal membaca \"%s\" Menolak memuat file baru\n", newFileName);
+                printf("Program mempertahankan data dari file yang\ndi input sebelumnya\n");
+                printf("------------------------------------\n");
             }
             else
             {
-                printf("File berhasil dibaca.\n");
+                strcpy(nameFile, newFileName);
+                totalWord = checkData;
+                printf("File baru berhasil dibaca.\n");
                 printf("Jumlah data : %d kata\n", totalWord);
             }
         }
+
     } while (pilihan != 7);
 
     // Membebaskan memory dari heap
