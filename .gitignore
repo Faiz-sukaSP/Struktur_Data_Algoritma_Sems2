@@ -8,6 +8,7 @@
 .vscode/
 
 # compiled files (C/C++)
+p
 *.out
 *.o
 *.exe
